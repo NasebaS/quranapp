@@ -30,6 +30,7 @@ function App() {
   const [selectedItem,setSelectedItem]=useState("");
   const [bookData,setBookData]=useState([]);
   const [boxDataArray,setBoxDataArray]=useState([]);
+  const [selectedChapter,setSelectedChapter] =useState([]);
 
 
 
@@ -45,6 +46,9 @@ function App() {
   const handleChange=(event)=>{
     setSelectedItem(event.target.value);
   }
+  const handleChapterChange=(event)=>{
+    setSelectedChapter(event.target.value);
+    }
   useEffect(()=>{
     if(selectedItem){
       let filteredItem=[];
@@ -67,6 +71,13 @@ setBoxDataArray(data.quran)
           <option key={id} value={item.name}>
             {item.name}
           </option>
+        ))}
+      </select>
+      <select value={selectedChapter} onChange={handleChapterChange} className='chapters'>
+        {boxDataArray.map((item,id)=>(
+<option key={id} value={item.chapter}>
+  {item.chapter}
+</option>
         ))}
       </select>
       <div className='section'>
