@@ -29,6 +29,8 @@ function App() {
 
   const [selectedItem,setSelectedItem]=useState("");
   const [bookData,setBookData]=useState([]);
+  const [boxDataArray,setBoxDataArray]=useState([]);
+
 
 
   useEffect(()=>{
@@ -38,22 +40,29 @@ function App() {
     const api=Object.values(data);
     setBookData(api);
       });
-      
-  
 },[]);
 
   const handleChange=(event)=>{
     setSelectedItem(event.target.value);
   }
-  let filteredItem=[];
+  useEffect(()=>{
+    if(selectedItem){
+      let filteredItem=[];
+filteredItem = bookData.find((item) => item.language === selectedItem);
+if(filteredItem){
+  fetch(filteredItem.link)
+.then((res)=>res.json())
+.then((data)=>{  
+setBoxDataArray(data.quran)
+
+
+})}    }
+
+  },[bookData,selectedItem])
+
   
- filteredItem = bookData.filter((item) => item.language === selectedItem);
-const selectedLink = filteredItem.length > 0 ? filteredItem[0].link : '';
   return (
-
-
-    <div className="App">
-      
+<div className="App">
       <select value={selectedItem} onChange={handleChange} className="languages">
         {LanguagesAvailable.map((item, id) => (
           <option key={id} value={item.name}>
@@ -62,15 +71,19 @@ const selectedLink = filteredItem.length > 0 ? filteredItem[0].link : '';
         ))}
       </select>
       <div className='section'>
-        <div className='langdiv'><p>Language :      {selectedItem}</p></div>
-        {selectedLink && (
-          <div>
-            Contents inside link:
-            <iframe src={selectedLink} title={selectedItem} className='iframeclass'/>
-          </div>)}
+        <div className='langdiv'>
+          <p>Language: {selectedItem}</p>
+        </div>
       
+          {boxDataArray.map((item, index) => (
+            <div key={index}>
+              <p>Chapter: {item.chapter}</p>
+              <p>Verse: {item.verse}</p>
+              <p>Text: {item.text}</p>
+            </div>
+          ))}
+        
       </div>
-      
     </div>
   );
 }
