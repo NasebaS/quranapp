@@ -37,3 +37,9 @@ html {
   padding:5px;
   display:flex;
 }
+.iframeclass{
+  float: left;
+    margin: 20px;
+    padding: 5px;
+    display: flex;
+}

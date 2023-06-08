@@ -2,22 +2,43 @@ import logo from './logo.svg';
 import './App.css';
 import "./quran2.jpg";
 import {LanguagesAvailable} from "./LanguageAvailable";
-import {useState,useEffect} from 'react';
+import React,{useState,useEffect} from 'react';
 import {API} from "./LanguageAvailable";
 
 
+function ErrorBoundary({ children }) {
+  const [hasError, setHasError] = useState(false);
+
+  const handleOnError = (error, errorInfo) => {
+    console.error('Error caught by error boundary:', error, errorInfo);
+    setHasError(true);
+  };
+
+  if (hasError) {
+    return <div>Oops! Something went wrong.</div>;
+  }
+
+  return (
+    <React.ErrorBoundary onError={handleOnError}>
+      {children}
+    </React.ErrorBoundary>
+  );
+}
 
 function App() {
 
   const [selectedItem,setSelectedItem]=useState("");
   const [bookData,setBookData]=useState([]);
 
+
   useEffect(()=>{
   fetch(`${API}`)
   .then((res)=>res.json())
   .then((data)=>{
-    setBookData(data);
+    const api=Object.values(data);
+    setBookData(api);
       });
+      
   
 },[]);
 
@@ -25,10 +46,9 @@ function App() {
     setSelectedItem(event.target.value);
   }
   let filteredItem=[];
-  if(bookData.length>0){
+  
  filteredItem = bookData.filter((item) => item.language === selectedItem);
-  console.log(filteredItem);
-}
+const selectedLink = filteredItem.length > 0 ? filteredItem[0].link : '';
   return (
 
 
@@ -42,10 +62,12 @@ function App() {
         ))}
       </select>
       <div className='section'>
-        <div className='langdiv'><p>Language :      {selectedItem}</p></div>{
-        filteredItem.map((item)=>(
-          <div key={item.id}>{item.link}</div>
-        ))}
+        <div className='langdiv'><p>Language :      {selectedItem}</p></div>
+        {selectedLink && (
+          <div>
+            Contents inside link:
+            <iframe src={selectedLink} title={selectedItem} className='iframeclass'/>
+          </div>)}
       
       </div>
       
