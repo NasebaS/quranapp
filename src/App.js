@@ -60,7 +60,6 @@ setBoxDataArray(data.quran)
 
   },[bookData,selectedItem])
 
-  
   return (
 <div className="App">
       <select value={selectedItem} onChange={handleChange} className="languages">
