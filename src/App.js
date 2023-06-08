@@ -30,7 +30,8 @@ function App() {
   const [selectedItem,setSelectedItem]=useState("");
   const [bookData,setBookData]=useState([]);
   const [boxDataArray,setBoxDataArray]=useState([]);
-  const [selectedChapter,setSelectedChapter] =useState([]);
+  const [selectedChapter,setSelectedChapter] =useState("");
+  const [chapterDataArray,setChapterDataArray]=useState([]);
 
 
 
@@ -58,11 +59,27 @@ if(filteredItem){
 .then((res)=>res.json())
 .then((data)=>{  
 setBoxDataArray(data.quran)
-
-
 })}    }
-
   },[bookData,selectedItem])
+
+  useEffect(()=>{
+    if(selectedChapter){
+      let filteredChapter=[];
+      filteredChapter=boxDataArray.quran.find((item)=>item.chapter===selectedChapter);
+      if(filteredChapter){
+        fetch(filteredChapter)
+        .then((res)=>res.json())
+        .then((data)=>{
+          setChapterDataArray(data)
+          console.log(filteredChapter)
+        })
+        .catch((error) => {
+          console.error("Error fetching chapter data:", error);
+        })
+        
+      }
+    }
+  },[selectedChapter,boxDataArray])
 
   return (
 <div className="App">
@@ -74,7 +91,7 @@ setBoxDataArray(data.quran)
         ))}
       </select>
       <select value={selectedChapter} onChange={handleChapterChange} className='chapters'>
-        {boxDataArray.map((item,id)=>(
+        {chapterDataArray.map((item,id)=>(
 <option key={id} value={item.chapter}>
   {item.chapter}
 </option>
@@ -85,7 +102,8 @@ setBoxDataArray(data.quran)
           <p>Language: {selectedItem}</p>
         </div>
       
-          {boxDataArray.map((item, index) => (
+          {boxDataArray
+          .map((item, index) => (
           
             <div key={index}>
               
