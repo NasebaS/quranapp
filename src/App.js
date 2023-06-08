@@ -76,8 +76,9 @@ setBoxDataArray(data.quran)
         </div>
       
           {boxDataArray.map((item, index) => (
+          
             <div key={index}>
-              <p>Chapter: {item.chapter}</p>
+              
               <p>Verse: {item.verse}</p>
               <p>Text: {item.text}</p>
             </div>
